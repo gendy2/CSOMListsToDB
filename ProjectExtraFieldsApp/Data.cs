@@ -9,36 +9,7 @@ namespace ProjectExtraFieldsApp
     public class Data
     {
         string DBConnection = ConfigurationManager.ConnectionStrings["Default"].ConnectionString;
-        CSOM csom= new CSOM(); 
-        
-        // public DataTable AddData<T>(List<T> ExtraFiels)
-        // {
-        //     var dt = new DataTable();
-        //     var type = typeof(T);
-        //     foreach (var item in ExtraFiels)
-        //     {
-        //         dt.Rows.Add(dt.NewRow());
-        //     }
-        //
-        //     
-        //     foreach (var prop in type.GetProperties())
-        //     {
-        //         DataColumn cl = new DataColumn(prop.Name);
-        //         cl.DataType = prop.PropertyType;
-        //         dt.Columns.Add(cl);
-        //         
-        //         // foreach (var item in ExtraFiels)
-        //         // {
-        //         //     DataRow dr = new DataRow()
-        //         // }
-        //     }
-        //     
-        //     SqlConnection con = new SqlConnection(DBConnection)
-        //     {
-        //         
-        //     };
-        //
-        // }
+        CSOM csom= new CSOM();
 
         public void AddData()
         {
@@ -47,15 +18,29 @@ namespace ProjectExtraFieldsApp
             {
                 conn.Open();
 
-                SqlCommand cmd =
-                    new SqlCommand("truncate table ProjectExtraFields",conn);
+                SqlCommand cmd = new SqlCommand(@"IF  NOT EXISTS (SELECT * FROM sys.objects 
+WHERE object_id = OBJECT_ID(N'[dbo].[ProjectExtraFields]') AND type in (N'U'))
+  CREATE TABLE [dbo].[ProjectExtraFields](
+	[ID] [int] IDENTITY(1,1) NOT NULL,
+	[Title] [nvarchar](255) NULL,
+	[ProjectUID] [uniqueidentifier] NOT NULL,
+	[Progress_Activity] [nvarchar](max) NULL,
+	[Planned_Activity] [nvarchar](max) NULL,
+	[Created] [datetime] NOT NULL,
+ CONSTRAINT [PK_ProjectExtraFields] PRIMARY KEY CLUSTERED 
+(
+	[ID] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]",conn);
+                    // new SqlCommand("truncate table ProjectExtraFields",conn);
                 cmd.CommandType = CommandType.Text;
-                var reader = cmd.ExecuteNonQuery();
-                
+                // var reader = 
+                cmd.ExecuteNonQuery();
+                cmd.CommandText = "truncate table ProjectExtraFields";
+                cmd.ExecuteNonQuery();
                 cmd.CommandText = "INSERT INTO ProjectExtraFields (Title, ProjectUID, Progress_Activity, Planned_Activity, Created) " +
                                   " VALUES ( @param2, @param3, @param4, @param5, @param6)";
                 
-                cmd.Connection = conn;
                 cmd.Parameters.Add("@param2", DbType.String);
                 cmd.Parameters.Add("@param3", DbType.Guid);
                 cmd.Parameters.Add("@param4", DbType.String);
