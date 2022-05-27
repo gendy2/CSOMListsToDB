@@ -2,6 +2,7 @@
 using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
+using System.Net.Mime;
 using Microsoft.SharePoint.Client;
 
 namespace ProjectExtraFieldsApp
@@ -14,6 +15,7 @@ namespace ProjectExtraFieldsApp
         public void AddData()
         {
             var records = csom.FetchData();
+            
             using (SqlConnection conn = new SqlConnection(DBConnection))
             {
                 conn.Open();
@@ -32,27 +34,26 @@ WHERE object_id = OBJECT_ID(N'[dbo].[ProjectExtraFields]') AND type in (N'U'))
 	[ID] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]",conn);
-                    // new SqlCommand("truncate table ProjectExtraFields",conn);
+                    
                 cmd.CommandType = CommandType.Text;
-                // var reader = 
                 cmd.ExecuteNonQuery();
                 cmd.CommandText = "truncate table ProjectExtraFields";
                 cmd.ExecuteNonQuery();
                 cmd.CommandText = "INSERT INTO ProjectExtraFields (Title, ProjectUID, Progress_Activity, Planned_Activity, Created) " +
-                                  " VALUES ( @param2, @param3, @param4, @param5, @param6)";
+                                  " VALUES ( @param0, @param1, @param2, @param3, @param4)";
                 
+                cmd.Parameters.Add("@param0", DbType.String);
+                cmd.Parameters.Add("@param1", DbType.Guid);
                 cmd.Parameters.Add("@param2", DbType.String);
-                cmd.Parameters.Add("@param3", DbType.Guid);
-                cmd.Parameters.Add("@param4", DbType.String);
-                cmd.Parameters.Add("@param5", DbType.String);
-                cmd.Parameters.Add("@param6", DbType.DateTime);
+                cmd.Parameters.Add("@param3", DbType.String);
+                cmd.Parameters.Add("@param4", DbType.DateTime);
 
                 foreach (var item in records)
                 {
                     cmd.Parameters[0].Value = item.Title;
                     cmd.Parameters[1].Value = item.ProjectUID;
-                    cmd.Parameters[2].Value = item.ProgressActivity;
-                    cmd.Parameters[3].Value = item.PlannedActivity;
+                    cmd.Parameters[2].Value = item.Progress_Activity;
+                    cmd.Parameters[3].Value = item.Planned_Activity;
                     cmd.Parameters[4].Value = item.Created;
 
                     cmd.ExecuteNonQuery();

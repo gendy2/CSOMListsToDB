@@ -34,6 +34,10 @@
         <WarningLevel>4</WarningLevel>
     </PropertyGroup>
     <ItemGroup>
+        <Reference Include="Dapper, Version=2.0.0.0, Culture=neutral, PublicKeyToken=null">
+          <HintPath>..\packages\Dapper.2.0.123\lib\net461\Dapper.dll</HintPath>
+          <Private>True</Private>
+        </Reference>
         <Reference Include="Microsoft.SharePoint.Client, Version=15.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c">
           <HintPath>..\..\..\..\..\Program Files\Common Files\microsoft shared\Web Server Extensions\15\ISAPI\Microsoft.SharePoint.Client.dll</HintPath>
         </Reference>
@@ -49,6 +53,7 @@
     <ItemGroup>
         <Compile Include="CSOM.cs" />
         <Compile Include="Data.cs" />
+        <Compile Include="DataDapper.cs" />
         <Compile Include="Helper.cs" />
         <Compile Include="Program.cs" />
         <Compile Include="ProjectExtraFieldsModel.cs" />
@@ -56,6 +61,7 @@
     </ItemGroup>
     <ItemGroup>
       <None Include="App.config" />
+      <None Include="packages.config" />
     </ItemGroup>
     <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
     <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

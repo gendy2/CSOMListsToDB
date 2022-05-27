@@ -21,21 +21,18 @@ namespace ProjectExtraFieldsApp
         
         public List<ProjectExtraFieldsModel> FetchData()
         {
-            List<ProjectExtraFieldsModel> PEF = new List<ProjectExtraFieldsModel>();
+            
             using (ClientContext ctx = new ClientContext(SharepointURL))
             {
-                
+                List<ProjectExtraFieldsModel> PEF = new List<ProjectExtraFieldsModel>();    
                 ctx.AuthenticationMode = ClientAuthenticationMode.Default;
                 ctx.Credentials = new NetworkCredential(Username, PW, Domain);
                 var RootWeb = ctx.Web;
-                ctx.Load(RootWeb);
-                ctx.ExecuteQuery();
-                var list = ctx.Web.Lists.GetByTitle("ProjectExtraFields");
-                ctx.Load(list);
-                ctx.ExecuteQuery();
+                var list = RootWeb.Lists.GetByTitle("ProjectExtraFields");
                 CamlQuery camlQuery = new CamlQuery();
                 var listItems = list.GetItems(camlQuery);
                 ctx.Load(listItems);
+                // var filteredQuery =  ctx.LoadQuery(listItems).Where(li=>li["ProjectUID"].ToString() == "1025706c-08af-ea11-bb6a-000d3a609328");
                 ctx.ExecuteQuery();
                 
                 foreach (var item in listItems)
@@ -45,18 +42,16 @@ namespace ProjectExtraFieldsApp
                     {
                         PEF.Add(new ProjectExtraFieldsModel
                         {
-                            Title = item["Title"].ToString() ?? "" ,
+                            Title = item["Title"] == null ? string.Empty : item["Title"].ToString() ,
                             ProjectUID = new Guid(item["ProjectUID"].ToString()),
                             Created = DateTime.Parse(item["Created"].ToString()),
-                            PlannedActivity = item["Planned_x0020_Activity"] == null ? String.Empty : item["Planned_x0020_Activity"].ToString().StripHtmlTags(),
-                            ProgressActivity = item["Progress_x0020_Activity"] == null ? String.Empty : item["Progress_x0020_Activity"].ToString().StripHtmlTags()
+                            Planned_Activity = item["Planned_x0020_Activity"] == null ? String.Empty : item["Planned_x0020_Activity"].ToString().StripHtmlTags(),
+                            Progress_Activity = item["Progress_x0020_Activity"] == null ? String.Empty : item["Progress_x0020_Activity"].ToString().StripHtmlTags()
                         });
                     }
                     
                 }
                 return PEF;
-
-                ctx.ExecuteQuery();
 
             }
 
