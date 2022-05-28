@@ -52,8 +52,8 @@ WHERE object_id = OBJECT_ID(N'[dbo].[ProjectExtraFields]') AND type in (N'U'))
                 {
                     cmd.Parameters[0].Value = item.Title;
                     cmd.Parameters[1].Value = item.ProjectUID;
-                    cmd.Parameters[2].Value = item.Progress_Activity;
-                    cmd.Parameters[3].Value = item.Planned_Activity;
+                    cmd.Parameters[2].Value = item.ProgressActivity;
+                    cmd.Parameters[3].Value = item.PlannedActivity;
                     cmd.Parameters[4].Value = item.Created;
 
                     cmd.ExecuteNonQuery();

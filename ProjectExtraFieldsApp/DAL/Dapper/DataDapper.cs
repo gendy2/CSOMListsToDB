@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Configuration;
 using System.Data.SqlClient;
 using System.Linq;
@@ -43,22 +44,25 @@ WHERE object_id = OBJECT_ID(N'[dbo].[ProjectExtraFields]') AND type in (N'U'))
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]";
             var sql2 = @"truncate table ProjectExtraFields";
-            var sql3 = "INSERT INTO ProjectExtraFields (Title, ProjectUID, Progress_Activity, Planned_Activity, Created) VALUES ( @param0, @param1, @param2, @param3, @param4)";
+            var sql3 = @"INSERT INTO ProjectExtraFields (Title, ProjectUID, Progress_Activity, Planned_Activity, Created)
+             VALUES ( @Title, @ProjectUID, @ProgressActivity, @PlannedActivity, @Created)";
             conn.Query(sql1);
             conn.Query(sql2);
 
             foreach (var item in vals)
             {
-                conn.Query(sql3, new
-                {
-                    @param0 = item.Title,
-                    @param1 = item.ProjectUID,
-                    @param2 =  item.Progress_Activity,
-                    @param3 = item.Planned_Activity,
-                    @param4 =  item.Created
-                });
+                conn.Query(sql3, item);
             }
             // return result;
+        }
+
+        public ProjectExtraFieldsModel UpdateRecord(string projectuid)
+        {
+            var vals = csom.FetchData().FirstOrDefault(i=>i.ProjectUID.ToString() == projectuid);
+            string sql =
+                @"update ProjectExtraFields set Title = @Title, ProjectUID = @ProjectUID, Progress_Activity = @ProgressActivity,
+                              PlannedActivity = @PlannedActivity, Created = @Created";
+           return conn.Query<ProjectExtraFieldsModel>(sql, vals).FirstOrDefault();
         }
     }
 }

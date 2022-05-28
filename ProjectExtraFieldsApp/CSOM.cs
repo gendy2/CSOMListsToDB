@@ -45,8 +45,8 @@ namespace ProjectExtraFieldsApp
                             Title = item["Title"] == null ? string.Empty : item["Title"].ToString() ,
                             ProjectUID = new Guid(item["ProjectUID"].ToString()),
                             Created = DateTime.Parse(item["Created"].ToString()),
-                            Planned_Activity = item["Planned_x0020_Activity"] == null ? String.Empty : item["Planned_x0020_Activity"].ToString().StripHtmlTags(),
-                            Progress_Activity = item["Progress_x0020_Activity"] == null ? String.Empty : item["Progress_x0020_Activity"].ToString().StripHtmlTags()
+                            PlannedActivity = item["Planned_x0020_Activity"] == null ? String.Empty : item["Planned_x0020_Activity"].ToString().StripHtmlTags(),
+                            ProgressActivity = item["Progress_x0020_Activity"] == null ? String.Empty : item["Progress_x0020_Activity"].ToString().StripHtmlTags()
                         });
                     }
                     
