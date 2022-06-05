@@ -19,12 +19,12 @@ namespace ProjectExtraFieldsApp
         string Domain = ConfigurationManager.AppSettings["Domain"];
 
         
-        public List<ProjectExtraFieldsModel> FetchData()
+        public List<ProjectProgressUpdateModel> FetchData()
         {
             
             using (ClientContext ctx = new ClientContext(SharepointURL))
             {
-                List<ProjectExtraFieldsModel> PEF = new List<ProjectExtraFieldsModel>();    
+                List<ProjectProgressUpdateModel> PPUList = new List<ProjectProgressUpdateModel>();    
                 ctx.AuthenticationMode = ClientAuthenticationMode.Default;
                 ctx.Credentials = new NetworkCredential(Username, PW, Domain);
                 var RootWeb = ctx.Web;
@@ -37,10 +37,9 @@ namespace ProjectExtraFieldsApp
                 
                 foreach (var item in listItems)
                 {
-
                     if (item != null)
                     {
-                        PEF.Add(new ProjectExtraFieldsModel
+                        PPUList.Add(new ProjectProgressUpdateModel
                         {
                             Title = item["Title"] == null ? string.Empty : item["Title"].ToString() ,
                             ProjectUID = new Guid(item["ProjectUID"].ToString()),
@@ -51,7 +50,7 @@ namespace ProjectExtraFieldsApp
                     }
                     
                 }
-                return PEF;
+                return PPUList;
 
             }
 

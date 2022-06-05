@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace ProjectExtraFieldsApp
 {
-    public class ProjectExtraFieldsModel
+    public class ProjectProgressUpdateModel
     {
         
         public int Id { get; set; }
